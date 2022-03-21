@@ -1,0 +1,25 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [ //继承规则
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+        // "plugin:vue/essential",
+        // "airbnb-base"
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        // "parser": "@typescript-eslint/parser",
+        "sourceType": "module"
+    },
+    "plugins": [
+        "vue"
+    ],
+    "rules": {
+        //ES6
+        "no-var": "error"
+    }
+}
