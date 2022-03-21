@@ -1,23 +1,50 @@
-<script lang="ts">
-const width = 10;
-const height = 10;
+<script lang="ts" setup>
+import { ref, reactive, defineComponent } from 'vue';
 
-let array = new Array(height).fill(new Array(width).fill(0));
-declare global {
-  interface Window {
-    something: any;
-  }
+const WIDTH = 10;
+const HEIGHT = 10;
+
+interface BlockState {
+  x: number;
+  y: number;
+  mine: Boolean;
 }
-import { ref } from "vue";
-window.something = ref(0);
+// 伪数组加箭头函数生成数组  Array.from([1, 2, 3], x => x + x);
+// let array = new Array(height).fill(new Array(width).fill(0));
+let array = Array.from({ length: HEIGHT }, (value, x) => {
+  return Array.from({ length: WIDTH },
+    (value, y): BlockState => ({
+      x: x,
+      y: y,
+      mine: Math.random() < 0.2,
+    })
+  );
+});
+var a = 20;
+function generateMines() {
+  "xxxx"
 
-console.log();
+}
+
+
+const state = reactive(array);
+
+// // ts声明全局变量
+// declare global {
+//   interface Window {
+//     something: any;
+//   }
+// }
+// window.something = state
 </script>
 <template>
   <div class="mine-map">
-    <div v-for="y in 10" :key="y">
-      <button class="mine-block" v-for="x in 10" :key="x">
-        {{ (y - 1) * 10 + x }}
+    <div v-for="(row, y) in state" :key="y">
+      <button class="mine-block" v-for="(block, x) in row" :key="x">
+        <!-- {{ block.mine? '💣': '' }} -->
+        <template v-if="block.mine">
+          <!-- <i class="ri-fire-fill"></i> -->
+        </template>
       </button>
     </div>
   </div>
