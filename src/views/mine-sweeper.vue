@@ -9,7 +9,8 @@ interface BlockState {
   y: number;
   mine: Boolean;
   count: number;
-
+  turnOver: Boolean;
+  explode: Boolean;
 }
 interface Postion {
   x: number;
@@ -23,14 +24,16 @@ let array = Array.from({ length: HEIGHT }, (value, x) => {
     (value, y): BlockState => ({
       x: x,
       y: y,
-      mine: Math.random() < 0.2,
+      mine: Math.random() < 0.15,
       count: 0,
+      turnOver: false,
+      explode: false,
     })
   );
 });
 const state = reactive(array);
 
-
+//计算数量
 function computeCount(arrayState: BlockState[][]) {
 
   //计算方向
@@ -95,15 +98,36 @@ function computeCount(arrayState: BlockState[][]) {
     }
   }
 }
+//点击翻牌
+function turnOverMine(arrayState: BlockState[][], x: number, y: number) {
+  arrayState[x][y].turnOver = true;
+  if (arrayState[x][y].mine) {
+    arrayState[x][y].explode = true;
+  }
+}
+//翻开为零的块
+function turnZero() {
+
+}
+
 computeCount(state)
 
 </script>
 <template>
   <div class="mine-map">
-    <div v-for="(row, y) in state" :key="y">
-      <button class="mine-block" v-for="(block, x) in row" :key="x">
-        <template v-if="block.mine">{{ block.mine ? '💣' : '' }}</template>
-        <template v-else-if="block.count">{{ block.count }}</template>
+    <div v-for="(row, x) in state" :key="x">
+      <button
+        class="mine-block"
+        :class="block.turnOver ? 'mine-block-color-over' : 'mine-block-color'"
+        v-for="(block, y) in row"
+        :key="y"
+        @click="turnOverMine(state, x, y)"
+      >
+        <template v-if="block.turnOver">
+          <!-- 💣 -->
+          <template v-if="block.mine && block.explode">{{ '💥' }}</template>
+          <template v-else>{{ block.count ? block.count : '' }}</template>
+        </template>
       </button>
     </div>
   </div>
@@ -127,5 +151,11 @@ computeCount(state)
   width: 40px;
   height: 40px;
   margin: 1px;
+}
+.mine-block-color {
+  background: rgb(119, 116, 116);
+}
+.mine-block-color-over {
+  background: #fff;
 }
 </style>
