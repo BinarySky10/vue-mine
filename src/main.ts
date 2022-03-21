@@ -11,7 +11,7 @@ import App from '@/App.vue';
 //图标库
 // https://remixicon.com/
 import 'remixicon/fonts/remixicon.css'
-var a = 20;
+var a = "20";
 createApp(App)
   .use(elementPlus)
   .use(router)

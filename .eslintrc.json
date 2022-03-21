@@ -4,15 +4,13 @@
         "es2021": true
     },
     "extends": [ //继承规则
+        // "plugin:vue/strongly-recommended",
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended"
-        // "plugin:vue/essential",
-        // "airbnb-base"
     ],
     "parserOptions": {
         "ecmaVersion": "latest",
-        // "parser": "@typescript-eslint/parser",
         "sourceType": "module"
     },
     "plugins": [
@@ -20,6 +18,9 @@
     ],
     "rules": {
         //ES6
-        "no-var": "error"
+        "no-var": [
+            "error",
+            "always"
+        ]
     }
 }
