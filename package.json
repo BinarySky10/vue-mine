@@ -11,15 +11,17 @@
   "dependencies": {
     "element-plus": "^1.2.0-beta.6",
     "remixicon": "^2.5.0",
-    "vue": "^3.2.26",
-    "vue-router": "^4.0.5"
+    "vue": "^3.2.31",
+    "vue-router": "^4.0.14"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^1.10.2",
-    "@vue/compiler-sfc": "^3.2.31",
+    "@antfu/eslint-config": "^0.18.9",
+    "@vitejs/plugin-vue": "^2.2.0",
     "eslint": "^8.11.0",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
-    "vite": "^2.8.6"
+    "typescript": "^4.5.4",
+    "vite": "^2.8.0",
+    "vue-tsc": "^0.29.8"
   }
 }
