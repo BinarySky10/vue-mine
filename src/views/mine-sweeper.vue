@@ -1,123 +1,121 @@
 <script lang="ts" setup>
-import { ref, reactive, defineComponent } from 'vue';
+import { defineComponent, reactive, ref } from 'vue'
 
-const WIDTH = 12;
-const HEIGHT = 12;
+const WIDTH = 12
+const HEIGHT = 12
 
 interface BlockState {
-  x: number;
-  y: number;
-  mine: Boolean;
-  count: number;
-  turnOver: Boolean;
-  explode: Boolean;
+  x: number
+  y: number
+  mine: Boolean
+  count: number
+  turnOver: Boolean
+  explode: Boolean
 }
 interface Postion {
-  x: number;
-  y: number;
+  x: number
+  y: number
 }
 
 // 伪数组加箭头函数生成数组  Array.from([1, 2, 3], x => x + x);
 // let array = new Array(height).fill(new Array(width).fill(0));
-let array = Array.from({ length: HEIGHT }, (value, x) => {
+const array = Array.from({ length: HEIGHT }, (value, x) => {
   return Array.from({ length: WIDTH },
     (value, y): BlockState => ({
-      x: x,
-      y: y,
+      x,
+      y,
       mine: Math.random() < 0.08,
       count: 0,
       turnOver: false,
       explode: false,
-    })
-  );
-});
-const state = reactive(array);
+    }),
+  )
+})
+const state = reactive(array)
 
-//计算方向 (todo: 应该让它具有排除错误的能力)
+// 计算方向 (todo: 应该让它具有排除错误的能力)
 function computeDirections(x: number, y: number): Postion[] {
-  //方向
+  // 方向
   const directions = [
     {
       x: -1,
-      y: -1
+      y: -1,
     },
     {
       x: -1,
-      y: 0
+      y: 0,
     },
     {
       x: -1,
-      y: 1
+      y: 1,
     },
     {
       x: 0,
-      y: -1
+      y: -1,
     },
     {
       x: 0,
-      y: 1
+      y: 1,
     },
     {
       x: 1,
-      y: -1
+      y: -1,
     },
     {
       x: 1,
-      y: 0
+      y: 0,
     },
     {
       x: 1,
-      y: 1
+      y: 1,
     },
   ]
-  return directions.map(item => {
+  return directions.map((item) => {
     return {
       x: x + item.x,
-      y: y + item.y
+      y: y + item.y,
     }
   })
 }
-//计算数量
+// 计算数量
 function computeCount(arrayState: BlockState[][]) {
   for (let y = 0; y < arrayState.length; y++) {
-    let row = arrayState[y]
+    const row = arrayState[y]
     for (let x = 0; x < row.length; x++) {
       if (arrayState[x][y]?.mine) {
-        continue;
+        continue
       }
-      let postions = computeDirections(x, y)
+      const postions = computeDirections(x, y)
       arrayState[x][y].count = 0
       postions.forEach((postion: Postion) => {
         if (arrayState?.[postion.x]?.[postion.y]?.mine) {
           arrayState[x][y].count += arrayState[postion.x][postion.y].mine ? 1 : 0
         }
       })
-
     }
   }
 }
-//点击翻牌
+// 点击翻牌
 function turnOverMine(arrayState: BlockState[][], x: number, y: number) {
-  arrayState[x][y].turnOver = true;
+  arrayState[x][y].turnOver = true
   if (arrayState[x][y].mine) {
-    arrayState[x][y].explode = true;
+    arrayState[x][y].explode = true
     return
   }
   if (arrayState[x][y].mine === false && arrayState[x][y].count === 0) {
 
     // turnZero(arrayState, x, y)
   }
-
 }
-//翻开为零的块 todo: 性能和逻辑有点问题
+// 翻开为零的块 todo: 性能和逻辑有点问题
 function turnZero(arrayState: BlockState[][], x: number, y: number) {
   if (arrayState[x][y].mine === false && arrayState[x][y].count === 0) {
-    arrayState[x][y].turnOver = true;
+    arrayState[x][y].turnOver = true
 
-    let postions = computeDirections(x, y)
+    const postions = computeDirections(x, y)
     postions.forEach((postion: Postion) => {
       if (arrayState?.[postion.x]?.[postion.y]) {
-        console.log(postion.x, postion.y)
+        // console.log(postion.x, postion.y)
         turnZero(arrayState, postion.x, postion.y)
       }
     })
@@ -131,10 +129,10 @@ computeCount(state)
   <div class="mine-map">
     <div v-for="(row, x) in state" :key="x">
       <button
-        class="mine-block"
-        :class="block.turnOver ? 'mine-block-color-over' : 'mine-block-color'"
         v-for="(block, y) in row"
         :key="y"
+        class="mine-block"
+        :class="block.turnOver ? 'mine-block-color-over' : 'mine-block-color'"
         @click="turnOverMine(state, x, y)"
       >
         <template v-if="block.turnOver">
