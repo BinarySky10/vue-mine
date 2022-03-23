@@ -97,25 +97,27 @@ function computeCount(arrayState: BlockState[][]) {
 }
 // 点击翻牌
 function turnOverMine(arrayState: BlockState[][], x: number, y: number) {
-  arrayState[x][y].turnOver = true
+  // 点中雷
   if (arrayState[x][y].mine) {
+    arrayState[x][y].turnOver = true
     arrayState[x][y].explode = true
     return
   }
-  if (arrayState[x][y].mine === false && arrayState[x][y].count === 0) {
-
-    // turnZero(arrayState, x, y)
+  // 没点中雷
+  if (arrayState[x][y].mine === false) {
+    turnZero(arrayState, x, y)
   }
 }
-// 翻开为零的块 todo: 性能和逻辑有点问题
+// 翻开为零的块
 function turnZero(arrayState: BlockState[][], x: number, y: number) {
+  if (arrayState[x][y].turnOver) {
+    return
+  }
+  arrayState[x][y].turnOver = true
   if (arrayState[x][y].mine === false && arrayState[x][y].count === 0) {
-    arrayState[x][y].turnOver = true
-
     const postions = computeDirections(x, y)
     postions.forEach((postion: Postion) => {
       if (arrayState?.[postion.x]?.[postion.y]) {
-        // console.log(postion.x, postion.y)
         turnZero(arrayState, postion.x, postion.y)
       }
     })
